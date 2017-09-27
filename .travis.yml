@@ -1,0 +1,13 @@
+language: php
+deploy:
+  provider: codedeploy
+  access_key_id: AKIAJOQ55UAI4EP5NVSA
+  secret_access_key:
+    secure: VmjWpun/kJZX/nVZtHVYr6N6Dx1QYnkvgfj9Ym4D9uEhU87/oXXDl1ODe2Bmn2XwAcJQAjE0U0g1Nxlhe3Fca8qnTP3EsUfGUP0hCo7T4e5IJdYb9zW6ahEku/WIh/iWcolV+y7pUOV6fL9BjEm1vZAV42iaA1bjwuZf0+zyq/li1IHfvVVPbKNPZheebK/cJ+DL9yCEdf+tcHUfOdZ6KvdZYPXi4EH8eu7QU0T3aOcjUCIUkQ4TC9IhWv8p/B10KnEdPZ3orasI0Y736EUOtsx+EcpPQ6AFWRecygdkZRnxFvRpAaVtly6ROgUNwQUgwKzqZKs64w5hDg1bC8gMMK+Lwzx5hTUIcN6GuBxu0INx19PX8X9XFwQRdZ2QGI0ch/8BGy07roA4k/lwcYPwprtYb2IzHyoiWyabrFLdLH8b3Qrq5RQ4QJzLP/anB7Vx1XTUezkBKK+EnTjxkprmZLvrToOCGt8iZDAKUO/c+3t3P+7uVxKqe+GPdN8d+w5ci5Z1fJwrMmaasUVfKbNNZe5Cq64sR8tGN/111KvEMJhhcMJM5m+/1m9164PFIrrjWs+fIZXqrv44c6cSYkIyK/MwSGuHdjVv8d9LxW1eEef5ytK7Zi32nxUQ54HEr8wIj9zmbaKN3heAWesYVUzngfYpZqRhulw+K8aNJIaL1dM=
+  bucket: aws-bucket-tellier
+  key: latest.zip
+  bundle_type: zip
+  application: aws-got
+  deployment_group: awsGot
+  on:
+    repo: erictellier/aws-got
