@@ -1,13 +1,31 @@
 language: php
+php:
+- '7.0'
 deploy:
-  provider: codedeploy
+- provider: s3
+  region: eu-central-1
   access_key_id: AKIAJOQ55UAI4EP5NVSA
-  secret_access_key:
-    secure: VmjWpun/kJZX/nVZtHVYr6N6Dx1QYnkvgfj9Ym4D9uEhU87/oXXDl1ODe2Bmn2XwAcJQAjE0U0g1Nxlhe3Fca8qnTP3EsUfGUP0hCo7T4e5IJdYb9zW6ahEku/WIh/iWcolV+y7pUOV6fL9BjEm1vZAV42iaA1bjwuZf0+zyq/li1IHfvVVPbKNPZheebK/cJ+DL9yCEdf+tcHUfOdZ6KvdZYPXi4EH8eu7QU0T3aOcjUCIUkQ4TC9IhWv8p/B10KnEdPZ3orasI0Y736EUOtsx+EcpPQ6AFWRecygdkZRnxFvRpAaVtly6ROgUNwQUgwKzqZKs64w5hDg1bC8gMMK+Lwzx5hTUIcN6GuBxu0INx19PX8X9XFwQRdZ2QGI0ch/8BGy07roA4k/lwcYPwprtYb2IzHyoiWyabrFLdLH8b3Qrq5RQ4QJzLP/anB7Vx1XTUezkBKK+EnTjxkprmZLvrToOCGt8iZDAKUO/c+3t3P+7uVxKqe+GPdN8d+w5ci5Z1fJwrMmaasUVfKbNNZe5Cq64sR8tGN/111KvEMJhhcMJM5m+/1m9164PFIrrjWs+fIZXqrv44c6cSYkIyK/MwSGuHdjVv8d9LxW1eEef5ytK7Zi32nxUQ54HEr8wIj9zmbaKN3heAWesYVUzngfYpZqRhulw+K8aNJIaL1dM=
+  secret_access_key: &1
+    secure: au/UPrFdrF+9/YFB8ySFp8ecf4OlM/EyHMhDwCszM4ZJJDqPasn3BpdXd4SY9OVjnMiP5F3Se8y4C/sBtSePkBE4qg95lj/OlIL1mICumPL/VGwI+vvdXOfYmhwynMSuTjnKZWmL4wg3Rgzft+cs16gwD2Xp1C57Znx1W55+n3KVjWYuTXQPhLjArpCuy5ixWr/fJ76QmHMPs03YoDj8BsM+/AX+hqG3xCAec/HC/4I2zYEArPBI09fE61mMSndzAjEXlfCYi6u6zvUjycayWbRIDhKARc1auFV3I841EH1c8rGFBhCeHJbt1cX3Y3XeerKvQFbuXzsO3xWhcMd7KeJrY82oKNh+VB/AtgXleYahgxU0HkQibJZYF87FUBTuP4s/jZQNTfT/C87E3nd8GRdHk0MC4K2RIcGCT8NwPQRVqBZb8GBGwwn050Qzqp7/0HYi5/7dbsUKCXzIgdwtabqZ2WkkJ4YnQmyPnzxdLzGJXRbUlHxSu42UopBuuK2zDM3fT4hUiqNGvpAZk37Vyf5vfbUugmGX900zi4+J4KGcVX6kLVgKllXxEF69V0lT0nH0Og4H2aQowtMgInefOhkSBANlbLKomKj0JoGro/hl4bKV+slCIVhZimZ86PW5eI4wtWofiJ86gBWofvruvm+JxfYOUP28GeQMTpxTXMs=
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  on: &2
+    repo: erictellier/aws-got
   bucket: aws-bucket-tellier
-  key: latest.zip
+  upload_dir: latest
+- provider: codedeploy
+  region: eu-central-1
+  access_key_id: AKIAJOQ55UAI4EP5NVSA
+  secret_access_key: *1
+  bucket: aws-bucket-tellier
+  key: latest/MyApp.zip
   bundle_type: zip
   application: aws-got
-  deployment_group: awsGot
-  on:
-    repo: erictellier/aws-got
+  deployment_group: awsGotGrp
+  on: *2
+before_deploy:
+- zip MyApp -r *
+- mkdir -p dpl_cd_upload
+- mv MyApp.zip dpl_cd_upload/MyApp.zip
+script:
+- phpunit --coverage-clover --bootstrap test.php
